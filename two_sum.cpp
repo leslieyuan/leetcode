@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <unordered_map>
 
 
 using namespace std;
@@ -12,17 +13,20 @@ class Solution
 		vector<int> twoSum(vector<int>& nums, int target) 
 		{
 			vector<int> vi_return;
-			for(int i = 0; i < nums.size(); ++i)
+			// Key is the num, value is the index.
+			// std::unordered_map has a constant time complexity.
+			unordered_map<int, int> umapii;
+			int i_flag = 0;
+			for(const auto &num : nums)
 			{
-				for(int j = i+1; j < nums.size(); ++j)
+				auto it = umapii.find(target - num);
+				if(it != umapii.end())
 				{
-					if(nums[j] == target - nums[i])
-					{
-						vi_return.push_back(i);
-						vi_return.push_back(j);
-						return vi_return;
-					}
+					vi_return.push_back(it->second);
+					vi_return.push_back(i_flag);
+					return vi_return;
 				}
+				umapii[num] = i_flag++;
 			}
 			return vi_return;
 		}
@@ -31,8 +35,8 @@ class Solution
 int main()
 {
 	Solution s;
-	vector<int> nums = {1,2,3,4,5};
-	int target = 9;
+	vector<int> nums = {0,1,2,3,4,5,0};
+	int target = 0;
 	vector<int> re = s.twoSum(nums, target);
 	for(int i : re)
 	{
